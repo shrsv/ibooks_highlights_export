@@ -3,12 +3,22 @@
 
 from jinja2 import Template
 from pprint import pprint
+from glob import glob
 import os
 import sqlite3
 import datetime
 
-basefolder = \
-"/Users/shrsv/Library/Containers/com.apple.iBooksX/Data/Documents/AEAnnotation/AEAnnotation_v10312011_1727_local.sqlite"
+base = "~/Library/Containers/com.apple.iBooksX/Data/Documents/AEAnnotation/"
+base = os.path.expanduser(base)
+sqlite_file = glob(base + "*.sqlite")
+
+if not sqlite_file:
+    print "Couldn't find the iBooks database. Exiting"
+    exit()
+else:
+    sqlite_file = sqlite_file[0]
+
+print sqlite_file
 
 htmlcode = """<html>
 <head>
@@ -25,7 +35,7 @@ htmlcode = """<html>
 </html>
 """
 
-db = sqlite3.connect(basefolder)
+db = sqlite3.connect(sqlite_file)
 cur = db.cursor()
 res = cur.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT from ZAEANNOTATION;")
 
