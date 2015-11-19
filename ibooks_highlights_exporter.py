@@ -18,7 +18,12 @@ if not sqlite_file:
 else:
     sqlite_file = sqlite_file[0]
 
-print sqlite_file
+def bold_text(selected_text, representative_text):
+    left = representative_text.find(selected_text)
+    right = left + len(selected_text)
+
+    op = representative_text[:left] + "<b>" +  representative_text[left:right] + "</b>" + representative_text[right:]
+    return op
 
 htmlcode = """<html>
 <head>
@@ -28,7 +33,7 @@ htmlcode = """<html>
 <h1>ibooks exported highlights ({{obj.date}})</h1>
 {% for h in obj.highlights %}
     {% if h[1] %}
-        <p>{{ h[1] }} <br /> <small>{{ h[0] }}</small></p>
+        <p>{{ bold_text(h[2], h[1]) }} <br /> <small>{{ h[0] }}</small></p>
     {% endif %}
 {% endfor %}
 </body>
@@ -37,9 +42,10 @@ htmlcode = """<html>
 
 db = sqlite3.connect(sqlite_file)
 cur = db.cursor()
-res = cur.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT from ZAEANNOTATION;")
+res = cur.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT from ZAEANNOTATION;")
 
 today = datetime.date.isoformat(datetime.date.today())
 template = Template(htmlcode)
+template.globals['bold_text'] = bold_text
 op = template.render(obj={"highlights":res, "date":today})
 print op.encode('utf-16')
