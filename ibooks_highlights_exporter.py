@@ -18,12 +18,35 @@ if not sqlite_file:
 else:
     sqlite_file = sqlite_file[0]
 
+base2 = "~/Library/Containers/com.apple.iBooksX/Data/Documents/BKLibrary/"
+base2 = os.path.expanduser(base2)
+assets_file = glob(base2 + "*.sqlite")
+
+if not assets_file:
+    print "Couldn't find the iBooks assets database. Exiting."
+    exit()
+else:
+    assets_file = assets_file[0]
+
+db1 = sqlite3.connect(sqlite_file)
+cur1 = db1.cursor()
+
+db2 = sqlite3.connect(assets_file)
+cur2 = db2.cursor()
+
 def bold_text(selected_text, representative_text):
     left = representative_text.find(selected_text)
     right = left + len(selected_text)
 
     op = representative_text[:left] + "<b>" +  representative_text[left:right] + "</b>" + representative_text[right:]
     return op
+
+def get_book_details(assetid):
+    global cur2
+    res2 = cur2.execute("select ZTITLE, ZAUTHOR from ZBKLIBRARYASSET where ZASSETID=?", (assetid,))
+    t =  res2.fetchone()
+    return t[0] + ", " + t[1]
+
 
 def get_color(num):
     if num == 0:
@@ -39,7 +62,7 @@ def get_color(num):
     elif num == 5:
         return "b_violet"
     else:
-        return
+        return "b_gray"
 
 htmlcode = """<html>
 <head>
@@ -77,20 +100,19 @@ p {
 <h1>ibooks exported highlights ({{obj.date}})</h1>
 {% for h in obj.highlights %}
     {% if h[1] %}
-        <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br /> <small>{{ h[0] }}</small></p>
+        <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
+        <small>{{ get_book_details(h[0]) }}</small></p>
     {% endif %}
 {% endfor %}
 </body>
 </html>
 """
 
-db = sqlite3.connect(sqlite_file)
-cur = db.cursor()
-res = cur.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION;")
-
+res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID;")
 today = datetime.date.isoformat(datetime.date.today())
 template = Template(htmlcode)
 template.globals['bold_text'] = bold_text
 template.globals['get_color'] = get_color
-op = template.render(obj={"highlights":res, "date":today})
+template.globals['get_book_details'] = get_book_details
+op = template.render(obj={"highlights":res1, "date":today})
 print op.encode('utf-16')
