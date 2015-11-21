@@ -8,6 +8,7 @@ import os
 import sqlite3
 import datetime
 
+asset_title_tab = {}
 base1 = "~/Library/Containers/com.apple.iBooksX/Data/Documents/AEAnnotation/"
 base1 = os.path.expanduser(base1)
 sqlite_file = glob(base1 + "*.sqlite")
@@ -114,5 +115,12 @@ template = Template(htmlcode)
 template.globals['bold_text'] = bold_text
 template.globals['get_color'] = get_color
 template.globals['get_book_details'] = get_book_details
+
+# beginning another way of doing the same thing, just more efficient
+res2 = cur2.execute("select distinct(ZASSETID), ZTITLE, ZAUTHOR from ZBKLIBRARYASSET")
+for assetid, title, author in res2:
+    asset_title_tab[assetid] = [title, author]
+exit()
+
 op = template.render(obj={"highlights":res1, "date":today})
 print op.encode('utf-16')
