@@ -99,6 +99,13 @@ p {
 </head>
 <body>
 <h1>ibooks exported highlights ({{obj.date}})</h1>
+<div id="toc">
+<ol>
+{% for assetid in obj.assetlist %}
+    <li><a href="#{{ assetid }}">{{ obj.assetlist[assetid][0] }}</a></li>
+{% endfor %}
+</ol>
+</div>
 {% for h in obj.highlights %}
     {% if h[1] %}
         <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
@@ -120,7 +127,6 @@ template.globals['get_book_details'] = get_book_details
 res2 = cur2.execute("select distinct(ZASSETID), ZTITLE, ZAUTHOR from ZBKLIBRARYASSET")
 for assetid, title, author in res2:
     asset_title_tab[assetid] = [title, author]
-exit()
 
-op = template.render(obj={"highlights":res1, "date":today})
+op = template.render(obj={"date":today, "highlights":res1, "assetlist":asset_title_tab})
 print op.encode('utf-16')
