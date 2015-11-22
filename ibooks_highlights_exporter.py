@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader
 from pprint import pprint
 from glob import glob
 import os
 import sqlite3
 import datetime
+
+
+PATH = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_ENVIRONMENT = Environment(
+    autoescape=False,
+    loader=FileSystemLoader(os.path.join(PATH, 'templates')),
+    trim_blocks=False)
+
 
 asset_title_tab = {}
 base1 = "~/Library/Containers/com.apple.iBooksX/Data/Documents/AEAnnotation/"
@@ -65,68 +73,22 @@ def get_color(num):
     else:
         return "b_gray"
 
-htmlcode = """<html>
-<head>
-<title>ibooks exported highlights ({{obj.date}})</title>
-<style>
-p {
-    padding: 5px;
-}
-.b_gray {
-    border-left: 10px solid #F2F2F2;
-}
 
-.b_green {
-    border-left: 10px solid #B4F13D;
-}
-
-.b_blue {
-    border-left: 10px solid #9FBFFB;
-}
-
-.b_yellow {
-    border-left: 10px solid #F8EE49;
-}
-
-.b_pink {
-    border-left: 10px solid #ED95C7;
-}
-
-.b_violet {
-    border-left: 10px solid #CF96EA;
-}
-</style>
-</head>
-<body>
-<h1>ibooks exported highlights ({{obj.date}})</h1>
-<div id="toc">
-<ol>
-{% for assetid in obj.assetlist %}
-    <li><a href="#{{ assetid }}">{{ obj.assetlist[assetid][0] }}</a></li>
-{% endfor %}
-</ol>
-</div>
-{% for h in obj.highlights %}
-    {% if h[1] %}
-        <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
-        <small>{{ get_book_details(h[0]) }}</small></p>
-    {% endif %}
-{% endfor %}
-</body>
-</html>
-"""
-
-res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID;")
-today = datetime.date.isoformat(datetime.date.today())
-template = Template(htmlcode)
+template = TEMPLATE_ENVIRONMENT.get_template("simpletemplate.html")
 template.globals['bold_text'] = bold_text
 template.globals['get_color'] = get_color
 template.globals['get_book_details'] = get_book_details
+
+res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID;")
+today = datetime.date.isoformat(datetime.date.today())
+
 
 # beginning another way of doing the same thing, just more efficient
 res2 = cur2.execute("select distinct(ZASSETID), ZTITLE, ZAUTHOR from ZBKLIBRARYASSET")
 for assetid, title, author in res2:
     asset_title_tab[assetid] = [title, author]
 
-op = template.render(obj={"date":today, "highlights":res1, "assetlist":asset_title_tab})
-print op.encode('utf-16')
+fname = "output.html"
+with open(fname, 'w') as f:
+        html = template.render(obj={"date":today, "highlights":res1, "assetlist":asset_title_tab})
+        f.write(html.encode('utf-16'))

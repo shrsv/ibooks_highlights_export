@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>ibooks exported highlights ({{obj.date}})</title>
+<style>
+p {
+    padding: 5px;
+}
+.b_gray {
+    border-left: 10px solid #F2F2F2;
+}
+
+.b_green {
+    border-left: 10px solid #B4F13D;
+}
+
+.b_blue {
+    border-left: 10px solid #9FBFFB;
+}
+
+.b_yellow {
+    border-left: 10px solid #F8EE49;
+}
+
+.b_pink {
+    border-left: 10px solid #ED95C7;
+}
+
+.b_violet {
+    border-left: 10px solid #CF96EA;
+}
+</style>
+</head>
+<body>
+<h1>ibooks exported highlights ({{obj.date}})</h1>
+<div id="toc">
+<ol>
+{% for assetid in obj.assetlist %}
+    <li><a href="#{{ assetid }}">{{ obj.assetlist[assetid][0] }}</a></li>
+{% endfor %}
+</ol>
+</div>
+{% for h in obj.highlights %}
+    {% if h[1] %}
+        <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
+        <small>{{ get_book_details(h[0]) }}</small></p>
+    {% endif %}
+{% endfor %}
+</body>
+</html>
