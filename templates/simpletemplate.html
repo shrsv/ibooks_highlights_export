@@ -34,13 +34,20 @@ p {
 <h1>ibooks exported highlights ({{obj.date}})</h1>
 <div id="toc">
 <ol>
-{% for assetid in obj.assetlist %}
+{% for assetid in obj.assetlist.keys()|sort %}
     <li><a href="#{{ assetid }}">{{ obj.assetlist[assetid][0] }}</a></li>
 {% endfor %}
 </ol>
 </div>
 {% for h in obj.highlights %}
     {% if h[1] %}
+        {% if last != h[0] %}
+        {# found a new book, print its title #}
+            {% set last=h[0] %}
+            <h2 id="{{ h[0] }}">{{ obj.assetlist[h[0]][0] }}</h2>
+            <small>{{ obj.assetlist[h[0]][1] }}</small>
+        {% endif %}
+        {# print the quote #}
         <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
         <small>{{ get_book_details(h[0]) }}</small></p>
     {% endif %}

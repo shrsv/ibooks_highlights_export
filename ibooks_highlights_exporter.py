@@ -88,7 +88,11 @@ res2 = cur2.execute("select distinct(ZASSETID), ZTITLE, ZAUTHOR from ZBKLIBRARYA
 for assetid, title, author in res2:
     asset_title_tab[assetid] = [title, author]
 
+#q = "select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION where ZANNOTATIONASSETID=?"
+#book
+#for key in asset_title_tab.keys():
+
 fname = "output.html"
 with open(fname, 'w') as f:
-        html = template.render(obj={"date":today, "highlights":res1, "assetlist":asset_title_tab})
-        f.write(html.encode('utf-16'))
+    html = template.render(obj={"last":"###", "date":today, "highlights":res1, "assetlist":asset_title_tab})
+    f.write(html.encode('utf-16'))
