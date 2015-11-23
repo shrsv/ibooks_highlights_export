@@ -31,26 +31,63 @@ p {
 </style>
 </head>
 <body>
-<h1>ibooks exported highlights ({{obj.date}})</h1>
+<h1>iBooks exported highlights ({{obj.date}})</h1>
 <div id="toc">
-<ol>
-{% for assetid in obj.assetlist.keys()|sort %}
-    <li><a href="#{{ assetid }}">{{ obj.assetlist[assetid][0] }}</a></li>
-{% endfor %}
-</ol>
 </div>
+<div id="contents">
 {% for h in obj.highlights %}
     {% if h[1] %}
         {% if last != h[0] %}
         {# found a new book, print its title #}
             {% set last=h[0] %}
-            <h2 id="{{ h[0] }}">{{ obj.assetlist[h[0]][0] }}</h2>
+            <h2>{{ obj.assetlist[h[0]][0] }}</h2>
             <small>{{ obj.assetlist[h[0]][1] }}</small>
         {% endif %}
         {# print the quote #}
         <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
         <small>{{ get_book_details(h[0]) }}</small></p>
     {% endif %}
-{% endfor %}
+    {% endfor %}
+</div>
+<script type="text/javascript">
+// copied as is from:
+// http://stackoverflow.com/questions/187619/is-there-a-javascript-solution-to-generating-a-table-of-contents-for-a-page
+
+window.onload = function () {
+    var toc = "";
+    var level = 0;
+
+    document.getElementById("contents").innerHTML =
+        document.getElementById("contents").innerHTML.replace(
+            /<h([\d])>([^<]+)<\/h([\d])>/gi,
+            function (str, openLevel, titleText, closeLevel) {
+                if (openLevel != closeLevel) {
+                    return str;
+                }
+
+                if (openLevel > level) {
+                    toc += (new Array(openLevel - level + 1)).join("<ul>");
+                } else if (openLevel < level) {
+                    toc += (new Array(level - openLevel + 1)).join("</ul>");
+                }
+
+                level = parseInt(openLevel);
+
+                var anchor = titleText.replace(/ /g, "_");
+                toc += "<li><a href=\"#" + anchor + "\">" + titleText
+                    + "</a></li>";
+
+                return "<h" + openLevel + "><a name=\"" + anchor + "\">"
+                    + titleText + "</a></h" + closeLevel + ">";
+            }
+        );
+
+    if (level) {
+        toc += (new Array(level + 1)).join("</ul>");
+    }
+
+    document.getElementById("toc").innerHTML += toc;
+};
+</script>
 </body>
 </html>
