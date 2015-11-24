@@ -7,6 +7,7 @@ from glob import glob
 import os
 import sqlite3
 import datetime
+import argparse
 
 
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -92,7 +93,14 @@ for assetid, title, author in res2:
 #book
 #for key in asset_title_tab.keys():
 
-fname = "output.html"
+parser = argparse.ArgumentParser(description='iBooks Highlights Exporter')
+parser.add_argument('-o', action="store", dest="fname")
+args = parser.parse_args()
+fname = args.fname
+if not fname:
+    fname = "output.html"
+
+
 with open(fname, 'w') as f:
     html = template.render(obj={"last":"###", "date":today, "highlights":res1, "assetlist":asset_title_tab})
     f.write(html.encode('utf-16'))
