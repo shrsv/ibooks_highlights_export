@@ -1,6 +1,11 @@
 <html>
 <head>
 <title>ibooks exported highlights ({{obj.date}})</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <style>
 p {
     padding: 5px;
@@ -31,17 +36,24 @@ p {
 </style>
 </head>
 <body>
-<h1>iBooks exported highlights ({{obj.date}})</h1>
-<div id="toc">
-</div>
+<div class="container">
+    <h1>iBooks exported highlights </h1>
+    <p>These highlights were exported on <em>{{obj.date}}</em></p>
+    <hr>
+    <div id="toc"><h2>Books</h2>
+    </div>
+    <hr>
+    <h2>Highlights</h2>
 <div id="contents">
 {% for h in obj.highlights %}
     {% if h[1] %}
         {% if last != h[0] %}
         {# found a new book, print its title #}
             {% set last=h[0] %}
-            <h2>{{ obj.assetlist[h[0]][0] }}</h2>
-            <small>{{ obj.assetlist[h[0]][1] }}</small>
+            <div class="well">
+                <h2>{{ obj.assetlist[h[0]][0] }}</h2>
+                <small>{{ obj.assetlist[h[0]][1] }}</small>
+            </div>
         {% endif %}
         {# print the quote #}
         <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
@@ -66,7 +78,7 @@ window.onload = function () {
                 }
 
                 if (openLevel > level) {
-                    toc += (new Array(openLevel - level + 1)).join("<ul>");
+                    toc += (new Array(openLevel - level + 1)).join("<ul class='nav nav-tabs nav-stacked'>");
                 } else if (openLevel < level) {
                     toc += (new Array(level - openLevel + 1)).join("</ul>");
                 }
@@ -89,5 +101,6 @@ window.onload = function () {
     document.getElementById("toc").innerHTML += toc;
 };
 </script>
+</div>
 </body>
 </html>

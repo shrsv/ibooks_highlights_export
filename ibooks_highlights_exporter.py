@@ -103,4 +103,4 @@ args = parser.parse_args()
 
 with open(args.fname, 'w') as f:
     html = template.render(obj={"last":"###", "date":today, "highlights":res1, "assetlist":asset_title_tab})
-    f.write(html.encode('utf-16'))
+    f.write(html.encode('utf-8'))
