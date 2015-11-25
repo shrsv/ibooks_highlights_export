@@ -94,13 +94,13 @@ for assetid, title, author in res2:
 #for key in asset_title_tab.keys():
 
 parser = argparse.ArgumentParser(description='iBooks Highlights Exporter')
-parser.add_argument('-o', action="store", dest="fname")
+parser.add_argument('-o', action="store", default="output.html", dest="fname",
+        help="Specify output filename (default: output.html)")
+parser.add_argument('--notoc', action="store_true", help="Disable the javascript TOC in the output")
+parser.add_argument('--nobootstrap', action="store_true", help="Disable the bootstrap library in the output")
 args = parser.parse_args()
-fname = args.fname
-if not fname:
-    fname = "output.html"
 
 
-with open(fname, 'w') as f:
+with open(args.fname, 'w') as f:
     html = template.render(obj={"last":"###", "date":today, "highlights":res1, "assetlist":asset_title_tab})
     f.write(html.encode('utf-16'))
