@@ -2,10 +2,12 @@
 <head>
 <title>ibooks exported highlights ({{obj.date}})</title>
 <meta charset="utf-8">
+{% if not obj.nobootstrap %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endif %}
 <style>
 p {
     padding: 5px;
@@ -40,8 +42,10 @@ p {
     <h1>iBooks exported highlights </h1>
     <p>These highlights were exported on <em>{{obj.date}}</em></p>
     <hr>
+    {% if not obj.notoc %}
     <div id="toc"><h2>Books</h2>
     </div>
+    {% endif %}
     <hr>
     <h2>Highlights</h2>
 <div id="contents">
@@ -61,6 +65,7 @@ p {
     {% endif %}
     {% endfor %}
 </div>
+{% if not obj.notoc %}
 <script type="text/javascript">
 // copied as is from:
 // http://stackoverflow.com/questions/187619/is-there-a-javascript-solution-to-generating-a-table-of-contents-for-a-page
@@ -101,6 +106,7 @@ window.onload = function () {
     document.getElementById("toc").innerHTML += toc;
 };
 </script>
+{% endif %}
 </div>
 </body>
 </html>
