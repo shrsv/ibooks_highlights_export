@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from jinja2 import Environment, FileSystemLoader
-from pprint import pprint
 from glob import glob
 import os
 import sqlite3
@@ -88,10 +87,6 @@ today = datetime.date.isoformat(datetime.date.today())
 res2 = cur2.execute("select distinct(ZASSETID), ZTITLE, ZAUTHOR from ZBKLIBRARYASSET")
 for assetid, title, author in res2:
     asset_title_tab[assetid] = [title, author]
-
-#q = "select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION where ZANNOTATIONASSETID=?"
-#book
-#for key in asset_title_tab.keys():
 
 parser = argparse.ArgumentParser(description='iBooks Highlights Exporter')
 parser.add_argument('-o', action="store", default="output.html", dest="fname",
