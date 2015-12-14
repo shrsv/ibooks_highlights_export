@@ -43,6 +43,15 @@ cur1 = db1.cursor()
 db2 = sqlite3.connect(assets_file)
 cur2 = db2.cursor()
 
+def get_all_titles():
+    global cur2
+    res = cur2.execute("select ZTITLE from ZBKLIBRARYASSET;").fetchall()
+    m = []
+    for r in res:
+        m.append(r[0])
+
+    return m
+
 def bold_text(selected_text, representative_text):
     left = representative_text.find(selected_text)
     right = left + len(selected_text)
