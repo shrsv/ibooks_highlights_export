@@ -37,18 +37,18 @@ if not assets_file:
 else:
     assets_file = assets_file[0]
 
-db1 = sqlite3.connect(sqlite_file)
+db1 = sqlite3.connect(sqlite_file, check_same_thread=False)
 cur1 = db1.cursor()
 
-db2 = sqlite3.connect(assets_file)
+db2 = sqlite3.connect(assets_file, check_same_thread=False)
 cur2 = db2.cursor()
 
 def get_all_titles():
     global cur2
-    res = cur2.execute("select ZTITLE from ZBKLIBRARYASSET;").fetchall()
+    res = cur2.execute("select ZASSETID, ZTITLE from ZBKLIBRARYASSET;").fetchall()
     m = []
     for r in res:
-        m.append(r[0])
+        m.append({"ZASSETID":r[0], "ZTITLE": r[1]})
 
     return m
 
