@@ -8,8 +8,7 @@ def hello():
     op = ["<ul>"]
 
     for it in res:
-        print it
-        op.append("<li id='%s'>%s</li>" % (it["ZASSETID"], it["ZTITLE"]))
+        op.append("<li id='%s'><input type='checkbox' name='titles' value='%s' />%s</li>" % (it["ZASSETID"], it["ZASSETID"], it["ZTITLE"]))
 
     op.append("</ul>")
 
