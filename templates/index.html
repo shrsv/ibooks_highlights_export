@@ -6,11 +6,14 @@
 <body>
 <div class="container">
     <h1>iBooks Highlights exporter</h1>
+    <form action="export" method="post">
     <ul>
     {% for h in booklist %}
-    <li id='{{ h["ZASSETID"] }}'><input type='checkbox' name='titles' value='{{ h["ZTITLE"] }}' />{{ h["ZTITLE"] }}</li>
+    <li id='{{ h["ZASSETID"] }}'><input type='checkbox' name='titles' value='{{ h["ZASSETID"] }}' />{{ h["ZTITLE"] }}</li>
     {% endfor %}
     </ul>
+    <input type="submit" value="Export">
+</form>
 </div>
 </body>
 </html>
