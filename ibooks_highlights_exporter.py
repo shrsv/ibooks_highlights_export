@@ -45,12 +45,13 @@ cur2 = db2.cursor()
 
 def get_all_titles():
     global cur2
-    res = cur2.execute("select ZASSETID, ZTITLE from ZBKLIBRARYASSET;").fetchall()
+    res = cur2.execute("select ZASSETID, ZTITLE, ZAUTHOR from ZBKLIBRARYASSET;").fetchall()
     m = []
     for r in res:
-        m.append({"ZASSETID":r[0], "ZTITLE": r[1]})
+        m.append({"ZASSETID":r[0], "ZTITLE": r[1], "ZAUTHOR": r[2]})
 
     return m
+
 
 def bold_text(selected_text, representative_text):
     left = representative_text.find(selected_text)
