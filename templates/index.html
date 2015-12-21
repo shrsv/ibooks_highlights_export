@@ -8,8 +8,9 @@
     <h1>iBooks Highlights exporter</h1>
     <form action="export" method="post">
     <ul>
-    {% for h in booklist %}
-    <li id='{{ h["ZASSETID"] }}'><input type='checkbox' name='titles' value='{{ h["ZASSETID"] }}' />{{ h["ZTITLE"] }}</li>
+    {% for aid, details in booklist.iteritems() %}
+    <li id='{{ aid }}'><input type='checkbox' name='titles' value='{{ aid }}'
+    />{{ details['ZTITLE'] }} ({{ details['COUNT'] }})</li>
     {% endfor %}
     </ul>
     <input type="submit" value="Export">

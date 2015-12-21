@@ -6,7 +6,8 @@ res = {}
 @app.route("/")
 def hello():
     global res
-    res = ib.get_all_titles()
+    #ib.get_all_relevant_titles()
+    res = ib.get_all_relevant_titles()
     #op = ["<ul>"]
 
     #for it in res:
@@ -15,6 +16,7 @@ def hello():
     #op.append("</ul>")
 
     #return "".join(op)
+    print res
     return render_template('index.html', booklist=res)
 
 @app.route("/export", methods=['POST'])

@@ -46,12 +46,31 @@ cur2 = db2.cursor()
 def get_all_titles():
     global cur2
     res = cur2.execute("select ZASSETID, ZTITLE, ZAUTHOR from ZBKLIBRARYASSET;").fetchall()
-    m = []
+    m = {}
     for r in res:
-        m.append({"ZASSETID":r[0], "ZTITLE": r[1], "ZAUTHOR": r[2]})
+        m[r[0]] = {"ZTITLE": r[1], "ZAUTHOR": r[2]}
 
     return m
 
+
+def get_all_relevant_assetids_and_counts():
+    global cur1
+    q = "select count(*), ZANNOTATIONASSETID from ZAEANNOTATION where ZANNOTATIONREPRESENTATIVETEXT IS NOT NULL group by ZANNOTATIONASSETID;"
+    res = cur1.execute(q).fetchall()
+    return res
+
+def get_all_relevant_titles():
+    aids_and_counts = get_all_relevant_assetids_and_counts()
+    print aids_and_counts
+    all_titles = get_all_titles()
+
+    op = {}
+
+    for cnt, aid in aids_and_counts:
+        all_titles[aid]["COUNT"] = cnt
+        op[aid] = all_titles[aid]
+
+    return op
 
 def bold_text(selected_text, representative_text):
     left = representative_text.find(selected_text)
