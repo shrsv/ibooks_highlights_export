@@ -16,14 +16,12 @@ def hello():
     #op.append("</ul>")
 
     #return "".join(op)
-    print res
     return render_template('index.html', booklist=res)
 
 @app.route("/export", methods=['POST'])
 def export():
-    print request.form
-    print res
-    #return jsonify(request.form)
+    print request.form.getlist('titles')
+    #assetlist = [x[0] for x in request.form]
     return render_template('simpletemplate.html', obj={"last":"###", "date":ib.today, "highlights":ib.res1, "assetlist":ib.asset_title_tab, "notoc":False, "nobootstrap":False})
 
 if __name__ == "__main__":

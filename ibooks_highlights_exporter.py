@@ -85,6 +85,10 @@ def get_book_details(assetid):
     t =  res2.fetchone()
     return t[0] + ", " + t[1]
 
+def get_all_highlights(assetlist):
+    global cur1
+    res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID;")
+
 
 def get_color(num):
     if num == 0:
