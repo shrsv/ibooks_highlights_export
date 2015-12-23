@@ -20,9 +20,13 @@ def hello():
 
 @app.route("/export", methods=['POST'])
 def export():
-    print request.form.getlist('titles')
+    ts = request.form.getlist('titles')
+    res1 = ib.get_all_highlights()
+    asset_title_tab = ib.get_asset_title_tab()
+    print res1
+    print asset_title_tab
     #assetlist = [x[0] for x in request.form]
-    return render_template('simpletemplate.html', obj={"last":"###", "date":ib.today, "highlights":ib.res1, "assetlist":ib.asset_title_tab, "notoc":False, "nobootstrap":False})
+    return render_template('simpletemplate.html', obj={"last":"###", "date":ib.today, "highlights":res1, "assetlist":asset_title_tab, "notoc":False, "nobootstrap":False})
 
 if __name__ == "__main__":
     app.debug = True
