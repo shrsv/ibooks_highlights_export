@@ -55,7 +55,8 @@ def get_all_titles():
 
 def get_all_relevant_assetids_and_counts():
     global cur1
-    q = "select count(*), ZANNOTATIONASSETID from ZAEANNOTATION where ZANNOTATIONREPRESENTATIVETEXT IS NOT NULL group by ZANNOTATIONASSETID;"
+    q = "select count(*), ZANNOTATIONASSETID from ZAEANNOTATION where ZANNOTATIONREPRESENTATIVETEXT " \
+        "IS NOT NULL group by ZANNOTATIONASSETID;"
     res = cur1.execute(q).fetchall()
     return res
 
@@ -87,9 +88,19 @@ def get_book_details(assetid):
 
 def get_all_highlights():
     global cur1
-    res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID;")
+    res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, "
+                        " ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID, ZPLLOCATIONRANGESTART;")
 
     return res1
+
+def get_chapter_name():
+    global cur1
+    res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, "
+                        " ZANNOTATIONSTYLE, ZFUTUREPROOFING5 from ZAEANNOTATION "
+                        "order by ZANNOTATIONASSETID, ZPLLOCATIONRANGESTART ;")
+    t =  res1.fetchone()
+    return t[4]
+
 
 
 def get_asset_title_tab():
@@ -123,8 +134,11 @@ template = TEMPLATE_ENVIRONMENT.get_template("simpletemplate.html")
 template.globals['bold_text'] = bold_text
 template.globals['get_color'] = get_color
 template.globals['get_book_details'] = get_book_details
+template.globals['get_chapter_name'] = get_chapter_name
 
-res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, ZANNOTATIONSTYLE from ZAEANNOTATION order by ZANNOTATIONASSETID;")
+res1 = cur1.execute("select ZANNOTATIONASSETID, ZANNOTATIONREPRESENTATIVETEXT, ZANNOTATIONSELECTEDTEXT, "
+                    "ZFUTUREPROOFING5, ZANNOTATIONSTYLE, ZFUTUREPROOFING5 from ZAEANNOTATION order by"
+                    " ZANNOTATIONASSETID, ZPLLOCATIONRANGESTART ;")
 today = datetime.date.isoformat(datetime.date.today())
 
 

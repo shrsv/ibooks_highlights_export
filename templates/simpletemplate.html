@@ -61,6 +61,7 @@ p {
         {% endif %}
         {# print the quote #}
         <p class="{{ get_color(h[3]) }}">{{ bold_text(h[2], h[1]) }} <br />
+	<small>{{ h[5] }}</small> <br/>
         <small>{{ get_book_details(h[0]) }}</small></p>
     {% endif %}
     {% endfor %}
