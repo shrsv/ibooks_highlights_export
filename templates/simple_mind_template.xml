@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simplemind-mindmaps device-type="ipad" doc-version="3" gen-version="1.8.3" generator="ibooks2simplemind">
+ <mindmap>
+  <meta>
+   <guid guid="{{ guid }} ">
+   </guid>
+   <title text="{{ book_name }}">
+   </title>
+   <page>
+    <visual-area height="3000" width="3000" x="100.28" y="-903.58">
+    </visual-area>
+   </page>
+   <style key="system.bright-palette">
+   </style>
+   <auto-numbering style="disabled">
+   </auto-numbering>
+   <scrollstate x="-101.72" y="-255.58" zoom="69">
+   </scrollstate>
+   <selection id="56" type="node">
+   </selection>
+   <main-centraltheme id="0">
+   </main-centraltheme>
+  </meta>
+  <topics>
+
+   <topic colorinfo="1" id="0" palette="1" parent="-1" text="{{ obj.bookname }}" x="500.00" y="500.00">
+   </topic>
+    {% for ch in obj.chapters %}
+        {% if ch[1] %}
+           <topic colorinfo="1" id="{{ ch[1] }}" palette="{{ get_mm_color(ch[1]+1) }}" parent="0" text="{{ ch[0] }}" x="500" y="600.01"></topic>
+        {% endif %}
+    {% endfor %}
+    {% for h in obj.highlights %}
+        {% if h[1] %}
+           <topic id="{{ h[6] }}" parent="{{ h[5] }}" text="{{ make_text_readable(h[1]) }}" x="500" y="600.01"></topic>
+        {% endif %}
+    {% endfor %}
+
+  </topics>
+  <relations>
+  </relations>
+ </mindmap>
+</simplemind-mindmaps>
