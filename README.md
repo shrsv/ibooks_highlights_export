@@ -1,5 +1,8 @@
 # ibooks_highlights_export
 
+[![Build
+Status](https://drone.io/github.com/shrsv/ibooks_highlights_export/status.png)](https://drone.io/github.com/shrsv/ibooks_highlights_export/latest)
+
 Export *all* highlights in your iBooks library into html.
 
 ## Screenshots
